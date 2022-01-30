@@ -1,8 +1,54 @@
 {
-    "makefile.extensionOutputFolder": "./.vscode",
+        "todo-tree.general.tags": [
+        "BUG",
+        "HACK",
+        "FIXME",
+        "TODO",
+        "XXX",
+        "[ ]",
+        "[x]"
+    ],
+    "terminal.integrated.defaultProfile.linux": "",
+    "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
+    "C_Cpp.updateChannel": "Insiders",
+    "activestate.statePath": "C:\\Users\\deocl\\AppData\\Roaming\\ActiveState\\bin\\state.exe",
+    "latex-workshop.view.pdf.viewer": "tab",
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "clang-format.executable": "/absolute/path/to/clang-format",
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
+    "diffEditor.ignoreTrimWhitespace": false,
+    "window.zoomLevel": 1,
+     "[cpp]": {
+         "editor.defaultFormatter": "ms-vscode.cpptools"
+     },
+   // "[cpp]": {
+   //     "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+  //  },
+    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: LLVM, IndentWidth: 2, ColumnLimit: 0, }",
+    "clang-format.assumeFilename": "  \"[cpp]\": { \"editor.defaultFormatter\": \"ms-vscode.cpptools\" },   \"C_Cpp.clang_format_fallbackStyle\": \"{ BasedOnStyle: LLVM, IndentWidth: 2, ColumnLimit: 0, }\",",
+    "json.schemas": [],
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "terminal.integrated.defaultProfile.windows": "WSL",
+    "tabnine.experimentalAutoImports": true,
+    "C_Cpp.vcFormat.indent.preserveComments": true,
+    "C_Cpp.formatting": "clangFormat",
+    "workbench.iconTheme": "vscode-icons",
+    "bracket-pair-colorizer-2.depreciation-notice": false,
+    "makefileCommandRunner.filePathEnv": "make",
+    "makefile.configurations" : [ { "name" : "littlekernel" , "makeArgs" : [ "PROJECT=armemu-test" ] } ] ,
+    "C_Cpp.intelliSenseEngineFallback": "Enabled",
+    "makefile.alwaysPreConfigure": true,
     "files.associations": {
         "iostream": "cpp",
-        "vector": "cpp"
-    },
-    "C_Cpp.errorSquiggles": "Disabled"
+        "vector": "cpp",
+        "ostream": "cpp"
+    }
 }
