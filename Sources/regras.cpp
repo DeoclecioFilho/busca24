@@ -164,6 +164,13 @@ void r15(int *jogo, int &v1, int &v2, int &v3, int &v4) {
 
 //?----------------------------------------------------------------------
 
+void verificaFinal(int *jogo, int *final) {
+  if (jogo[0] == final[0] && jogo[1] == final[1] && jogo[2] == final[2] && jogo[3] == final[3] && jogo[4] == final[4])
+    cout << "\nFim de jogo!\n";
+  else
+    cout << "\nContinue...\n";
+}
+
 /**
  * @brief Imprime o estado atual
  *
@@ -281,7 +288,7 @@ vector<int> gravaFila(int *jogo, vector<char> &noFilho, int &filho, int k, int w
 void filaRegras(vector<char> noFilho, vector<int> fila, vector<string> &lstAbertos) {
   string k;
   char f;
-  cout << "Fila de Regras: { ";
+  cout << "Filhos de "<< char(RAIZ) << "(0): " "{ ";
   for (size_t i = 0; i < fila.size(); i++) {
     f = noFilho[i];
     k = to_string(fila[i]);
@@ -375,7 +382,6 @@ void concStrCharA(string k, char f, vector<string> &lstAbertos) {
 }
 
 void Grava_Filhos_No(int *jogo, int *final, int &filho, vector<string> &lstAbertos) {
-
   for (int i = 1; i < NUM; i++) {
     int val = 0, temp;
     if (jogo[i] != 0) {
@@ -388,11 +394,12 @@ void Grava_Filhos_No(int *jogo, int *final, int &filho, vector<string> &lstAbert
       char f = char(filho);
       string k = to_string(val);
       concStrCharA(k, f, lstAbertos);
-      cout << char(filho) << "(" << val << ")"
+      cout << char(filho)
+           << "(" << val << ")"
            << " ";
     }
   }
-  cout << "} " << endl;
+  cout << "} ";
 }
 
 //*
@@ -430,7 +437,7 @@ void ordenaFila(vector<int> &fila, vector<string> &lstAbertos) {
   delete[] filaAb;
 }
 
-//! Regra: Segunda carta escolhida
+//! Regra: terceira carta escolhida
 int valorSoma(int *jogo, int i) {
   int valor = 0;
   int temp = 0;
@@ -440,14 +447,13 @@ int valorSoma(int *jogo, int i) {
   //! soma das cartas restantes
   if (jogo[i] != 0) { //&& RESULT % jogo[i] == 0
     valor = (4 + jogo[i]);
-    valor-=4;
+    valor -= 4;
     valor += (temp - jogo[i]); // 4 % x + SOMA DAS CARTAS - CARTA(i)
-     
   }
   return valor;
 }
 
-//! Regra: Segunda carta escolhida
+//! Regra: terceira carta escolhida
 int valorSub(int *jogo, int i) {
   int valor = 0;
   int temp = 0;
@@ -458,30 +464,74 @@ int valorSub(int *jogo, int i) {
   if (jogo[i] != 0) { //&& RESULT % jogo[i] == 0
     valor = (4 - jogo[i]);
     if (valor < 0)
-      valor = valor *(-1);
-      valor-=4;
-      valor = valor *(-1);
+      valor = valor * (-1);
+    valor -= 4;
+    valor = valor * (-1);
     valor += (temp - jogo[i]); // 4 % x + SOMA DAS CARTAS - CARTA(i)
-  
+  }
+  return valor;
+}
+
+//! Regra: quarta carta escolhida
+int valorSomaQ(int *jogo, int i) {
+  int valor = 0;
+  int temp = 0;
+  for (int j = 1; j < NUM; j++) { //! soma das cartas restantes
+    temp += jogo[j];
+  }
+  //! subtração das cartas restantes
+  if (jogo[i] != 0) {
+    valor = (1 + jogo[i]);
+    if (valor < 0)
+      valor = valor * (-1);
+    valor -= 4;
+    valor = valor * (-1);
+    valor += (temp - jogo[i]); // 4 % x + SOMA DAS CARTAS - CARTA(i)
   }
   return valor;
 }
 vector<int> gravaFilaFilho(int *jogo, vector<char> &noFilho, int &filho, int *carta, int k, int w) {
+  int cont = 0;
+  vector<int> filaFilho;
+  for (size_t i = 1; i < NUM; i++)
+    if (jogo[i] != 0)
+      cont++;
 
-  vector<int> fila;
-  for (int i = 1; i < NUM; i++) {
-    filho++;
-    if (jogo[i] != 0) {
-      fila.push_back(valorSub(jogo, i));
-      noFilho.push_back(char(filho));
+  if (cont > 1) {
+
+    for (int i = 1; i < NUM; i++) {
+      if (jogo[i] != 0) {
+        filho++;
+        filaFilho.push_back(valorSub(jogo, i));
+        noFilho.push_back(char(filho));
+      }
+    }
+    for (int i = 1; i < NUM; i++) {
+      if (jogo[i] != 0) {
+        filho++;
+        filaFilho.push_back(valorSoma(jogo, i));
+        noFilho.push_back(char(filho));
+      }
+    }
+  } else {
+    for (int i = 1; i < NUM; i++) {
+      if (jogo[i] != 0) {
+        filho++;
+        filaFilho.push_back(valorSomaQ(jogo, i));
+        noFilho.push_back(char(filho));
+      }
     }
   }
-  for (int i = 1; i < NUM; i++) {
-    if (jogo[i] != 0) {
-      filho++;
-      fila.push_back(valorSoma(jogo, i));
-      noFilho.push_back(char(filho));
-    }
+  return filaFilho;
+}
+
+void imprimeAbertos(vector<int> &fila, vector<string> &lstAbertos, vector<char> &noFilho) {
+  for (int i = 0; i < fila.size(); i++) {
+    char f = noFilho[i];
+    string k = to_string(fila[i]);
+    concStrCharA(k, f, lstAbertos);
+    cout << noFilho[i] << "(" << fila[i] << ")"
+         << " ";
   }
-  return fila;
+  cout << "}";
 }
