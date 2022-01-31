@@ -38,5 +38,7 @@ void menorFilho(vector<char> noFilho, vector<int> fila,vector<string> &lstAberto
 void Grava_Filhos_No(int *jogo,int *final, int &filho,vector<string> &lstAbertos);
 void ordenaFila(vector<int> &fila, vector<string> &lstAbertos);
 vector<int> gravaFilaFilho(int *jogo, vector<char> &noFilho, int &filho, int *carta, int k, int w) ;
+void imprimeAbertos(vector<int> &fila, vector<string> &lstAbertos, vector<char> &noFilho);
+void verificaFinal(int *jogo, int *final);
 
 #endif /* C56D52EA_FECC_43F3_A9F1_2E6579F5B34E */

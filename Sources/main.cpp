@@ -31,6 +31,34 @@ void alteraValor(int *jogo) {
   }
 }
 
+// H(6) = 5
+void alteraValor2(int *jogo) {
+  for (int i = 1; i < NUM; i++) {
+    if (jogo[i] == 5) {
+      jogo[i] = 0;
+      jogo[0] = 6*((4-5)*(-1));
+    }
+  }
+}
+
+// L(0) = 3
+void alteraValor3(int *jogo) {
+  for (int i = 1; i < NUM; i++) {
+    if (jogo[i] == 3) {
+      jogo[i] = 0;
+      jogo[0] = 6*(((4-5)*(-1))+3);
+    }
+  }
+}
+
+void limpaNo(vector<char> noFilho, vector<int> fila) {
+  while (fila.size() != 0)
+    fila.erase(fila.begin());
+
+  while (noFilho.size() != 0)
+    noFilho.erase(noFilho.begin());
+}
+
 int main() {
 
   int jogo[NUM] = {0, 4, 6, 5, 3}, final[NUM] = {24, 0, 0, 0, 0}, filho = RAIZ;
@@ -42,10 +70,9 @@ int main() {
   char f;
 
   cout << "\n\n";
-  cout << "   *** BUSCA ORDENADA ***  \n\n";
+  cout << "           *** BUSCA ORDENADA ***  \n\n";
   cout << " - Critério de desempate - \n";
-  cout
-      << " Carta de menor valor ou ordem de entrada na lista de abertos.  \n";
+  cout << "Carta de menor valor ou ordem de entrada na lista de abertos.  \n\n";
   cout << "Estado inicial: ";
   cout << char(RAIZ) << " = ";
   estado(jogo);
@@ -71,12 +98,12 @@ int main() {
   listaAbertos(lstAbertos);
   cout << "Estado atual: ";
   estado(jogo);
-  cout << " -> {" << carta[0] << "*()}" << endl;
+  cout << " -> {" << carta[1] << " * ()}" << endl;
   cout << "Filhos de  " << lstAbertos[0] << ": { ";
   lstFechados.push_back(lstAbertos[0]);
   lstAbertos.erase(lstAbertos.begin());
   Grava_Filhos_No(jogo, final, filho, lstAbertos);
-
+  verificaFinal(jogo, final);
   //!=====================================================
   listaFechados(lstFechados);
   ordenaFila(fila, lstAbertos);
@@ -85,41 +112,71 @@ int main() {
   cout << "Estado atual: ";
   alteraValor(jogo);
   estado(jogo);
-  cout << " -> {" << carta[1] << "*(" << carta[0] << ")}" << endl;
+  cout << " -> {" << carta[1] << " * (" << carta[0] << ")}" << endl;
   cout << "Filhos de  " << lstAbertos[0] << ": { ";
   lstFechados.push_back(lstAbertos[0]);
   lstAbertos.erase(lstAbertos.begin());
-  Grava_Filhos_No(jogo, final, filho, lstAbertos);
+  limpaNo(noFilho, fila);
 
-  //!=====================================================
-  cout << endl
-       << endl;
-
-  cout << "\n";
   while (fila.size() != 0)
     fila.erase(fila.begin());
-
   while (noFilho.size() != 0)
     noFilho.erase(noFilho.begin());
 
-  imprime(noFilho, fila, jogo, carta, filho);
-  cout << "\n\ndepois gravaFila";
-
-  // verifica final do jogo
-  int i = 1;
-  if (jogo[i] == 0 && jogo[i + 1] == 0 && jogo[i + 2] == 0 && jogo[i + 3] == 0)
-    cout << "\nFim de jogo!\n";
-  else
-    cout << "\nContinue...\n";
+  // Grava_Filhos_No(jogo, final, filho, lstAbertos);
 
   fila = gravaFilaFilho(jogo, noFilho, filho, carta, 1, 1);
-  imprime(noFilho, fila, jogo, carta, filho);
+  imprimeAbertos(fila, lstAbertos, noFilho);
+  verificaFinal(jogo, final);
+
+  cout << "\n";
+  //!=====================================================
+  listaFechados(lstFechados);
+  ordenaFila(fila, lstAbertos);
+  listaAbertos(lstAbertos);
+
+  cout << "Estado atual: ";
+  alteraValor2(jogo);
+  estado(jogo);
+  cout << " -> {" << carta[1] << " * (|" << carta[0] << " - " << carta[2] << "|)}" << endl;
+  cout << "Filhos de  " << lstAbertos[0] << ": { ";
+
+  lstFechados.push_back(lstAbertos[0]);
+  lstAbertos.erase(lstAbertos.begin());
+  limpaNo(noFilho, fila);
+    while (fila.size() != 0)
+    fila.erase(fila.begin());
+  while (noFilho.size() != 0)
+    noFilho.erase(noFilho.begin());
+
+  fila = gravaFilaFilho(jogo, noFilho, filho, carta, 1, 1);
+  imprimeAbertos(fila, lstAbertos, noFilho);
+  verificaFinal(jogo, final);
+  cout << "\n";
+//!=====================================================
+  listaFechados(lstFechados);
+  ordenaFila(fila, lstAbertos);
+  listaAbertos(lstAbertos);
+
+  cout << "Estado atual: ";
+  alteraValor3(jogo);
+  estado(jogo);
+  cout << " -> {" << carta[1] << " * (|" << carta[0] << " - " << carta[2] << "| + 3)}" << endl;
+  cout << "Filhos de  " << lstAbertos[0] << ": { ";
+
+  lstFechados.push_back(lstAbertos[0]);
+  lstAbertos.erase(lstAbertos.begin());
+  limpaNo(noFilho, fila);
+    while (fila.size() != 0)
+    fila.erase(fila.begin());
+  while (noFilho.size() != 0)
+    noFilho.erase(noFilho.begin());
+
+  fila = gravaFilaFilho(jogo, noFilho, filho, carta, 1, 1);
+  imprimeAbertos(fila, lstAbertos, noFilho);
+  verificaFinal(jogo, final);
 
   cout << "\n\n";
-
-  cout << "\nfilho: " << filho;
-  cout << endl
-       << endl;
 
   return 0;
 }
