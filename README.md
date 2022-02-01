@@ -1,6 +1,7 @@
 # Inteligência Artificial - Trabalho Prático
 
 ## Tema do trabalho
+
 # FÓRMULA PARA 24
 
 ## Equipe
