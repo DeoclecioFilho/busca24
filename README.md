@@ -16,14 +16,14 @@ Matrícula   Nome:
 
 ## Parte I:
 
-- Busca em Largura;
-- Busca em Profundidade.
+- Busca em Largura
+- Busca em Profundidade
 
 ## Parte II:
 
-- Busca Gulosa (Heurística);
-- Busca Ordenada;
-- Busca A*;
+- Busca Gulosa (Heurística)
+- Busca Ordenada
+- Busca A*
 
 ## Como Compilar?
 
