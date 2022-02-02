@@ -432,6 +432,19 @@ void limpaNo(vector<char> &noFilho, vector<int> &fila) {
   while (noFilho.size() != 0)
     noFilho.erase(noFilho.begin());
 }
+void limpaNoH(vector<char> &noFilho,vector<char> &noFilhoA, vector<int> &filaA, vector<int> &filaO, vector<int> &filaH) {
+  while (filaA.size() != 0)
+    filaA.erase(filaA.begin());
+  while (filaO.size() != 0)
+    filaO.erase(filaO.begin());
+  while (filaH.size() != 0)
+    filaH.erase(filaH.begin());
+
+  while (noFilho.size() != 0)
+    noFilho.erase(noFilho.begin());  
+  while (noFilhoA.size() != 0)
+    noFilhoA.erase(noFilhoA.begin());
+}
 
 void alteraValor(int *jogo, int k) {
   for (int i = 1; i < NUM; i++) {

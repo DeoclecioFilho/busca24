@@ -42,6 +42,7 @@ void menu()
     default:
         system("clear");
         cout << "\n\nOpção inválida! Tente novamente.\n";
+        menu();
         break;
     }
     menu();

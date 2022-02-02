@@ -32,5 +32,6 @@ void limpaNo(vector<char> &noFilho, vector<int> &fila);
 void ImpFilhoRaizH(int *jogo, int &filho);
 vector<int> gravaFilaFilhoH(int *jogo, vector<char> &noFilho, int &filho, int *carta, int *cartaX) ;
 void verificaFinalH(int *jogo, int *final, int &custo, vector<string> &lstFechados);
+void limpaNoH(vector<char> &noFilho,vector<char> &noFilhoA, vector<int> &filaA, vector<int> &filaO, vector<int> &filaH);
 
 #endif /* C56D52EA_FECC_43F3_A9F1_2E6579F5B34E */
