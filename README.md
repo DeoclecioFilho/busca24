@@ -37,5 +37,5 @@ make
 ## Como rodar?
 
 ```
-./busca.exe
+./busca24.exe
 ```
