@@ -7,7 +7,7 @@ const int NUM = 5;
 const int RAIZ = 64;
 const int RESULT = 24;
 
-
+vector <int> Formula24();
 void alteraValor(int *jogo, int i);
 void impEstado(int *jogo);
 int valorCartas(int *jogo, int i);
@@ -26,5 +26,11 @@ vector<int> gravaFilaFilho(int *jogo, vector<char> &noFilho, int &filho, int *ca
 void impFilhos(vector<int> &fila, vector<string> &lstAbertos, vector<char> &noFilho);
 void verificaFinal(int *jogo, int *final);
 void limpaNo(vector<char> &noFilho, vector<int> &fila);
+
+//? =========== Heurística =========
+
+void ImpFilhoRaizH(int *jogo, int &filho);
+vector<int> gravaFilaFilhoH(int *jogo, vector<char> &noFilho, int &filho, int *carta, int *cartaX) ;
+void verificaFinalH(int *jogo, int *final, int &custo, vector<string> &lstFechados);
 
 #endif /* C56D52EA_FECC_43F3_A9F1_2E6579F5B34E */

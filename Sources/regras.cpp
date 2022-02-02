@@ -3,6 +3,16 @@
 #include <string>
 using namespace std;
 
+vector<int> Formula24(vector<int> form24) {
+  int t = 0;
+  for (size_t i = 0; i < NUM - 2; i++)
+    form24[i] = 0;
+
+  form24[2] = form24[0] * form24[1];
+
+  return form24;
+}
+
 void verificaFinal(int *jogo, int *final) {
   if (jogo[0] == final[0] && jogo[1] == final[1] && jogo[2] == final[2] && jogo[3] == final[3] && jogo[4] == final[4])
     cout << "\nFim de jogo!\n";
@@ -10,12 +20,22 @@ void verificaFinal(int *jogo, int *final) {
     cout << "\nContinue...\n";
 }
 
-/**
- * @brief Imprime o estado atual
- *
- * @param jogo
- * @param n
- */
+void verificaFinalH(int *jogo, int *final, int &custo, vector<string> &lstFechados) {
+  if (jogo[0] == final[0] && jogo[1] == final[1] && jogo[2] == final[2] && jogo[3] == final[3] && jogo[4] == final[4]) {
+    {
+      cout << "\nSucesso!\n";
+      for (size_t i = 0; i < lstFechados.size(); i++)
+        custo += stoi(lstFechados[i].substr(2, 2));
+      cout << "Custo: " << custo << endl;
+    }
+  } else {
+    if (jogo[0] != final[0] && jogo[1] == final[1] && jogo[2] == final[2] && jogo[3] == final[3] && jogo[4] == final[4])
+      cout << "\nImpasse!\n";
+    else
+      cout << "\nContinue...\n";
+  }
+}
+
 void impEstado(int *jogo) {
   cout << "{";
   for (int i = 0; i < NUM; i++) {
@@ -194,29 +214,6 @@ char *concStrCharA(string k, char f, vector<string> &lstAbertos) {
   return strchar;
 }
 
-/* void Grava_Filhos_No(int *jogo, int *final, int &filho, vector<string> &lstAbertos) {
-  for (int i = 1; i < NUM; i++) {
-    int val = 0, temp;
-    if (jogo[i] != 0) {
-      for (int j = 1; j < NUM; j++)
-        val += jogo[j];
-      val -= jogo[i];                        // soma dos valores das cartas, menos a carta i
-      val += (jogo[i] % (RESULT / jogo[0])); // (24/6) = 4 // 4%4 // 5%4 // 3%4 = resto + soma das cartas
-
-      filho++;
-      char f = char(filho);
-      string k = to_string(val);
-      // char *str;
-      concStrCharA(k, f, lstAbertos);
-      // lstAbertos.push_back(str);
-      cout << char(filho)
-           << "(" << val << ")"
-           << " ";
-    }
-  }
-  cout << "} ";
-} */
-
 //! Ordena a lista de abertos
 void ordenaFila(vector<int> &fila, vector<string> &lstAbertos) {
 
@@ -247,6 +244,7 @@ void ordenaFila(vector<int> &fila, vector<string> &lstAbertos) {
   for (size_t i = 0; i < cont; i++) {
     lstAbertos.push_back(filaAb[i]);
   }
+
   delete[] filaRg;
   delete[] filaAb;
 }
@@ -265,7 +263,7 @@ int valorI(int *jogo, int i) {
   }
   return valor;
 }
-//! Regra: Primeira carta escolhida
+//! Regra: segunda carta escolhida
 int valorDiv(int *jogo, int i) {
   int valor = 0;
   int temp = 0;
@@ -323,14 +321,14 @@ int valorSomaQ(int *jogo, int i) {
   for (int j = 1; j < NUM; j++) { //! soma das cartas restantes
     temp += jogo[j];
   }
-  //! subtração das cartas restantes
+
   if (jogo[i] != 0) {
     valor = (1 + jogo[i]);
     if (valor < 0)
       valor = valor * (-1);
     valor -= 4;
     valor = valor * (-1);
-    valor += (temp - jogo[i]); // 4 % x + SOMA DAS CARTAS - CARTA(i)
+    valor += (temp - jogo[i]);
   }
   return valor;
 }
@@ -420,9 +418,7 @@ void impFilhos(vector<int> &fila, vector<string> &lstAbertos, vector<char> &noFi
   for (int i = 0; i < fila.size(); i++) {
     char f = noFilho[i];
     string k = to_string(fila[i]);
-    // char *str;
     concStrCharA(k, f, lstAbertos);
-    //  lstAbertos.push_back(str);
     cout << noFilho[i] << "(" << fila[i] << ")"
          << " ";
   }
@@ -481,4 +477,210 @@ void ImpFilhoRaiz(int *jogo, int &filho) {
       cout << ",";
   }
   cout << "}\n";
+}
+
+//?================= Heurística ============================
+
+void ImpFilhoRaizH(int *jogo, int &filho) {
+  int temp = 0;
+  int valor = 0;
+  for (int j = 1; j < NUM; j++) { //! soma do numeo de cartas diferente de zero
+    if (jogo[j] != 0)
+      temp++;
+  }
+
+  cout << "{";
+  for (int i = 1; i < NUM; i++) {
+    valor = (RESULT / jogo[i]) + (temp - 1);
+    if (RESULT % jogo[i] == 0) {
+      cout << " " << char(filho + i) << " - " << RESULT << "/" << jogo[i] << " + " << temp - 1 << " → " << valor;
+    } else {
+      cout << " " << char(filho + i) << " - " << RESULT << "/" << jogo[i] << " + " << temp - 1 << " → ESTADO INVÁLIDO";
+    }
+    if (i < NUM - 1)
+      cout << ",";
+  }
+  cout << "}\n";
+}
+
+//! Regra1: Inicial  - Raiz
+int valorH4(int *jogo, int i) {
+  int valor = 0;
+  int temp = 0;
+
+  for (int j = 1; j < NUM; j++) { //! soma do numeo de cartas diferente de zero
+    if (jogo[j] != 0)
+      temp++;
+  }
+  if (jogo[i] != 0 && RESULT % jogo[i] == 0) {
+    valor = (RESULT / jogo[i]) + (temp - 1);
+  }
+  return valor;
+}
+//! Regra2: segunda carta
+int valorH3(int *jogo, int i) {
+  int valor = 0;
+  int temp = 0;
+
+  for (int j = 1; j < NUM; j++) { //! soma do numeo de cartas diferente de zero
+    if (jogo[j] != 0)
+      temp++;
+  }
+  if (jogo[i] != 0) {
+    // cout<< "\nJogo"<<i<<": " << jogo[i]<< endl;
+    valor = (4 - jogo[i]);
+    if (valor < 0)
+      valor = valor * (-1);
+    valor += (temp - 1);
+  }
+
+  return valor;
+}
+
+//! Regra3: terceira carta - subtração
+int valorH2Sub(int *jogo, int i) {
+  int valor = 0;
+  int temp = 0;
+
+  for (int j = 1; j < NUM; j++) { //! soma do numeo de cartas diferente de zero
+    if (jogo[j] != 0)
+      temp++;
+  }
+  //! subtração das cartas restantes
+  if (jogo[i] != 0) {
+    valor = (4 - jogo[i]);
+    if (valor < 0)
+      valor = valor * (-1);
+    // valor -= 4;
+    // if (valor < 0)
+    //   valor = valor * (-1);
+    valor += (temp - 1) - 4; // (4-(4-i))
+  }
+
+  return valor;
+}
+
+//! Regra4: terceira carta - Soma
+int valorH2Soma(int *jogo, int i) {
+  int valor = 0;
+  int temp = 0;
+
+  for (int j = 1; j < NUM; j++) { //! soma do numeo de cartas diferente de zero
+    if (jogo[j] != 0)
+      temp++;
+  }
+  //! soma das cartas restantes
+  if (jogo[i] != 0) {
+    valor = (4 + jogo[i]);
+    // if (valor < 0)
+    //   valor = valor * (-1);
+    // valor -= 4;
+    // if (valor < 0)
+    //   valor = valor * (-1);
+    valor += (temp - 1) - 4; // (4-(4+i))
+  }
+
+  return valor;
+}
+
+//! Regra5: quarta carta
+int valorH1(int *jogo, int i) {
+  int valor = 0;
+  int temp = 0;
+
+  for (int j = 1; j < NUM; j++) { //! soma do numeo de cartas diferente de zero
+    if (jogo[j] != 0)
+      temp++;
+  }
+  //! soma da carta restante
+  if (jogo[i] != 0) {
+    valor = (1 + jogo[i]);
+    valor += (temp - 1) - 4;
+  }
+
+  return valor;
+}
+
+vector<int> gravaFilaFilhoH(int *jogo, vector<char> &noFilho, int &filho, int *carta, int *cartaX) {
+  vector<int> v;
+
+  int cont = 0, valor = 0;
+  vector<int> filaFilho;
+  for (size_t i = 1; i < NUM; i++)
+    if (jogo[i] != 0)
+      cont++;
+  switch (cont) {
+  case 4: { // raiz
+    for (int i = 1; i < NUM; i++) {
+      if (jogo[i] != 0 && RESULT % jogo[i] == 0) {
+        filho++;
+        valor = valorH4(jogo, i);
+        if (valor < cartaX[0]) {
+          cartaX[0] = valor;
+          cartaX[1] = jogo[i];
+        }
+        filaFilho.push_back(valor);
+        noFilho.push_back(char(filho));
+      } else {
+        filho++;
+      }
+    }
+  } break;
+  case 3: {
+    for (int i = 1; i < NUM; i++) {
+      if (jogo[i] != 0) {
+        filho++;
+        valor = valorH3(jogo, i);
+        if (valor < cartaX[0]) {
+          cartaX[0] = valor;
+          cartaX[1] = jogo[i];
+        }
+        filaFilho.push_back(valor);
+        noFilho.push_back(char(filho));
+      }
+    }
+  } break;
+  case 2: {
+    for (int i = 1; i < NUM; i++) {
+      if (jogo[i] != 0) {
+        filho++;
+        valor = valorH2Sub(jogo, i);
+        if (valor < cartaX[0]) {
+          cartaX[0] = valor;
+          cartaX[1] = jogo[i];
+        }
+        filaFilho.push_back(valor);
+        noFilho.push_back(char(filho));
+      }
+    }
+
+    for (int i = 1; i < NUM; i++) {
+      if (jogo[i] != 0) {
+        filho++;
+        valor = valorH2Soma(jogo, i);
+        if (valor < cartaX[0]) {
+          cartaX[0] = valor;
+          cartaX[1] = jogo[i];
+        }
+        filaFilho.push_back(valor);
+        noFilho.push_back(char(filho));
+      }
+    }
+  } break;
+  case 1: {
+    for (int i = 1; i < NUM; i++) {
+      if (jogo[i] != 0) {
+        filho++;
+        valor = valorH1(jogo, i);
+        if (valor < cartaX[0]) {
+          cartaX[0] = valor;
+          cartaX[1] = jogo[i];
+        }
+        filaFilho.push_back(valor);
+        noFilho.push_back(char(filho));
+      }
+    }
+  } break;
+  }
+  return filaFilho;
 }

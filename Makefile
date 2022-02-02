@@ -22,7 +22,7 @@ CC_FLAGS= -g -I./Headers
 # Command used at clean target
 RM = rm -rf
 
-target     := ./buscas.exe 
+target     := ./busca24.exe 
  
 #
 # Compilation and linking
