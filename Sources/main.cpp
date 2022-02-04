@@ -25,7 +25,8 @@ void menu()
         exit(0);
         break;
     case 1:
-        buscaProf();
+        buscaProf2();
+       // buscaProf();
         break;
     case 2:
         buscaLarg();

@@ -5,3 +5,6 @@ using namespace std;
 
 void buscaProf();
 void buscaLarg();
+void buscaProf2();
+
+

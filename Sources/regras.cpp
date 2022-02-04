@@ -1,6 +1,6 @@
 #include "regras.h"
 #include "stdc++.h"
-#include <string>
+
 using namespace std;
 
 vector<int> Formula24(vector<int> form24) {
@@ -173,10 +173,9 @@ void impLstFila(vector<string> &fila) {
   cout << " }\n";
 }
 
-void impLstPilha(stack<string> &p) {
-  stack<string> temp;
+void impPilha(stack<string> &p) {
   cout << "Pilha: {";
-  // for (size_t i = 0; i < p.size(); i++)
+  stack<string> temp;
   while (!p.empty()) {
     cout << " " << p.top();
     temp.push(p.top());
@@ -187,6 +186,37 @@ void impLstPilha(stack<string> &p) {
     p.push(temp.top());
     temp.pop();
   }
+}
+
+void impPilhaAbertos(stack<string> &p) {
+  cout << "Pilha de Abertos: {";
+  stack<string> temp;
+  while (!p.empty()) {
+    cout << " " << p.top();
+    temp.push(p.top());
+    p.pop();
+  }
+
+  while (!temp.empty()) {
+    p.push(temp.top());
+    temp.pop();
+  }
+  cout << " }\n";
+}
+
+void impPilhaFechados(stack<string> &p) {
+  cout << "Pilha de Fechados: {";
+  stack<string> temp;
+  while (!p.empty()) {
+    cout << " " << p.top();
+    temp.push(p.top());
+    p.pop();
+  }
+  while (!temp.empty()) {
+    p.push(temp.top());
+    temp.pop();
+  }
+  cout << " }\n";
 }
 
 void concStrCharF(string k, char f, vector<string> &lstFechados) {
@@ -242,7 +272,22 @@ char *concStrCharA(string k, char f, vector<string> &lstAbertos) {
   strcat(str, str3);
   strcat(str, str4);
   char *strchar = str;
+  int j = 0;
+ /*  vector<string> temp;
+  if (!lstAbertos.empty())
+      while(!lstAbertos.empty()){
+      temp.push_back(lstAbertos[j]);
+      lstAbertos.erase(lstAbertos.begin());
+      j++;
+    } */
+
   lstAbertos.push_back(strchar);
+
+/*   for (size_t i = 0; i < temp.size(); i++){
+    lstAbertos.push_back(temp[i]);
+    temp.erase(temp.begin());
+  } */
+
   return strchar;
 }
 
@@ -487,7 +532,7 @@ void alteraValor(int *jogo, int k) {
         jogo[0] *= k; // E(8) = 4
         break;
       case 6:
-        jogo[0] = k; // (0) = 6
+        jogo[0] = k; // (0) = 3
         break;
       case 5:
         jogo[0] = 6 * ((4 - 5) * (-1)); // H(6) = 5
@@ -859,17 +904,15 @@ void limpaFilaL(vector<string> &fila) {
     fila.erase(fila.begin());
 }
 
+//? ================= PROFUNDIDADE ==================
+
 void limpaPilha(stack<string> &p) {
   while (!p.empty())
     p.pop();
 }
 
+void gEstadoP(int *jogo, int &filho, int gJogo[][NUM], string cartaXL[][NO], int &contNO, int t, stack<string> &pFilho) {
 
-
-
-stack<string> gEstadoP(int *jogo, int &filho, int gJogo[][NUM], string cartaXL[][NO], int &contNO, int t) {
-
-  stack<string> pFilho;
   int temp = 0;
   cout << "{ ";
   for (int i = 1; i < NUM; i++) {
@@ -882,8 +925,9 @@ stack<string> gEstadoP(int *jogo, int &filho, int gJogo[][NUM], string cartaXL[]
         pFilho.push(s);
 
         contNO++;
-        cartaXL[0][contNO] = s;
+        cartaXL[0][contNO] = pFilho.top();
         cartaXL[1][contNO] = to_string(jogo[i]);
+
         cout << s << "("; // letra
         for (int j = 0; j < NUM; j++) {
           temp = jogo[i];
@@ -910,7 +954,7 @@ stack<string> gEstadoP(int *jogo, int &filho, int gJogo[][NUM], string cartaXL[]
           string s = convChar(f);
           pFilho.push(s); // vetFilho - filhos de A
           contNO++;
-          cartaXL[0][contNO] = s;                  // letra
+          cartaXL[0][contNO] = pFilho.top();       // letra
           cartaXL[1][contNO] = to_string(jogo[i]); // numero
           cout << s << "(";                        // letra
           for (int j = 0; j < NUM; j++) {
@@ -926,16 +970,255 @@ stack<string> gEstadoP(int *jogo, int &filho, int gJogo[][NUM], string cartaXL[]
               cout << ", ";
 
             jogo[0] = stoi(cartaXL[1][t]); //! 4 → A
-            // cout << " * "<< jogo[0]<<" * ";
+            //  cout << " * " << jogo[0] << " * ";
           }
           cout << ")";
           if (i < NUM - 1)
             cout << ", ";
         }
         // jogo[0] = stoi(cartaXL[1][t]); //! 4 → A
-      } 
+      }
     }
   }
   cout << " }";
-  return pFilho;
+}
+
+void ordenaPilha(string cartaXL[][NO]) {
+
+  stack<string> l, n, tl, tn;
+  vector<string> sl, sn;
+  for (size_t j = 0; j < NO; j++) {
+    l.push(cartaXL[0][j]);
+    n.push(cartaXL[1][j]);
+  }
+  while (!n.empty()) {
+    sl.push_back(l.top());
+    sn.push_back(n.top());
+    l.pop();
+    n.pop();
+  }
+  for (size_t i = 0; i < NO; i++) {
+    cartaXL[0][i] = sl[i];
+    cartaXL[1][i] = sn[i];
+  }
+
+  cout << "\n\n";
+  for (size_t i = 0; i < 2; i++) {
+    for (size_t j = 0; j < NO; j++) {
+      if (cartaXL[i][j] != " ")
+        cout << " " << cartaXL[i][j] << " ";
+    }
+    cout << "\n";
+  }
+}
+
+//?---------------------------
+
+void ImpFilhoRaizP(int *jogo, int &filho) {
+  int temp = 0;
+  int valor = 0;
+  for (int j = 1; j < NUM; j++) { //! soma das cartas
+    temp += jogo[j];
+  }
+
+  cout << "{";
+  for (int i = 1; i < NUM; i++) {
+    valor = (RESULT / jogo[i]);
+    if (RESULT % jogo[i] == 0) {
+      cout << " " << char(filho + i) << " - " << RESULT << "/" << jogo[i] << " → " << valor;
+    } else {
+      cout << " " << char(filho + i) << " - " << RESULT << "/" << jogo[i] << " → ESTADO INVÁLIDO";
+    }
+    if (i < NUM - 1)
+      cout << ",";
+  }
+  cout << "}\n";
+}
+
+//?-------------------------------------------
+
+//! Regra: Inicial
+int valorIP(int *jogo, int i) {
+  int valor = 0;
+  int temp = 0;
+
+  for (int j = 1; j < NUM; j++) {
+    temp += jogo[j];
+  }
+  if (jogo[i] != 0 && RESULT % jogo[i] == 0) {
+    valor = (RESULT / jogo[i]);
+    //  valor += (temp - jogo[i]);
+  }
+  return valor;
+}
+//! Regra: segunda carta escolhida
+int valorSubP(int *jogo, int i) {
+  int valor = 0;
+  int temp = 0;
+
+  if (jogo[i] != 0) {
+    valor = (3 * jogo[i]);
+    if (valor < 0)
+      valor = valor * (-1);
+    // valor += (temp - jogo[i]);
+  }
+  return valor;
+}
+
+vector<int> gravaFilaFilhoP(int *jogo, vector<char> &noFilho, int &filho, int *carta, int *cartaX) {
+  int cont = 0, valor = 0;
+  vector<int> filaFilho;
+  for (size_t i = 1; i < NUM; i++)
+    if (jogo[i] != 0)
+      cont++;
+  switch (cont) {
+  case 4: {
+    cout << "4";
+    for (int i = 1; i < NUM; i++) {
+      if (jogo[i] != 0 && RESULT % jogo[i] == 0) {
+        filho++;
+        valor = valorIP(jogo, i);
+        if (valor < cartaX[0]) {
+          cartaX[0] = valor;
+          cartaX[1] = jogo[i];
+        }
+        filaFilho.push_back(valor);
+        noFilho.push_back(char(filho));
+      } else {
+        filho++;
+      }
+    }
+  } break;
+  case 3: {
+    cout << "3";
+    for (int i = 1; i < NUM; i++) {
+      if (jogo[i] != 0) {
+        filho++;
+        valor = valorSubP(jogo, i);
+        if (valor < cartaX[0]) {
+          cartaX[0] = valor;
+          cartaX[1] = jogo[i];
+        }
+        filaFilho.push_back(valor);
+        noFilho.push_back(char(filho));
+      }
+    }
+  } break;
+  case 2: {
+    cout << "2";
+    for (int i = 1; i < NUM; i++) {
+      if (jogo[i] != 0) {
+        filho++;
+        valor = valorSub(jogo, i);
+        if (valor < cartaX[0]) {
+          cartaX[0] = valor;
+          cartaX[1] = jogo[i];
+        }
+        filaFilho.push_back(valorSub(jogo, i));
+        noFilho.push_back(char(filho));
+      }
+    }
+    for (int i = 1; i < NUM; i++) {
+      if (jogo[i] != 0) {
+        filho++;
+        valor = valorSoma(jogo, i);
+        if (valor < cartaX[0]) {
+          cartaX[0] = valor;
+          cartaX[1] = jogo[i];
+        }
+        filaFilho.push_back(valorSoma(jogo, i));
+        noFilho.push_back(char(filho));
+      }
+    }
+  } break;
+  case 1: {
+    cout << "1";
+    for (int i = 1; i < NUM; i++) {
+      if (jogo[i] != 0) {
+        filho++;
+        valor = valorSomaQ(jogo, i);
+        if (valor < cartaX[0]) {
+          cartaX[0] = valor;
+          cartaX[1] = jogo[i];
+        }
+        filaFilho.push_back(valorSomaQ(jogo, i));
+        noFilho.push_back(char(filho));
+      }
+    }
+  } break;
+  }
+
+  return filaFilho;
+}
+
+void impFilhosC(vector<int> &fila, vector<string> &lstAbertos, vector<char> &noFilho) {
+  // cout << "Pilha de Abertos: {";
+  stack<char> tempF;
+  stack<string> tempK;
+  for (int i = 0; i < fila.size(); i++) {
+    tempF.push(noFilho[i]);
+    tempK.push(to_string(fila[i]));
+  }
+
+  for (int i = 0; i < fila.size(); i++) {
+    char f = tempF.top();
+    string k = tempK.top();
+    concStrCharA(k, f, lstAbertos);
+    noFilho[i] = f;
+    fila[i] = stoi(k);
+    tempF.pop();
+    tempK.pop();
+  }
+  // cout << "}";
+}
+
+void impFilhosO(vector<int> &fila, vector<string> &lstAbertos, vector<char> &noFilho) {
+  for (int i = 0; i < fila.size(); i++) {
+    cout << noFilho[i] << "(" << fila[i] << ")"
+         << " ";
+  }
+  cout << "}";
+
+  impFilhosC(fila, lstAbertos, noFilho);
+}
+
+void impLstFechadosP(vector<string> &lstFechados) {
+  cout << "Pilha de Fechados: {";
+  for (size_t i = 0; i < lstFechados.size(); i++) {
+    cout << " " << lstFechados[i];
+  }
+  cout << " }\n";
+}
+
+void impLstAbertosP(vector<string> &lstAbertos) {
+  cout << "Pilha de Abertos: {";
+  for (size_t i = 0; i < lstAbertos.size(); i++) {
+    cout << " " << lstAbertos[i];
+  }
+  cout << " }\n";
+}
+
+void alteraValorP(int *jogo, int k) {
+  for (int i = 1; i < NUM; i++) {
+    if (jogo[i] == k) {
+      jogo[i] = 0;
+      switch (k) {
+      case 4:
+        jogo[0] *= k; // E(8) = 4
+        break;
+      case 3:
+        jogo[0] = k; // (0) = 3
+        break;
+      case 5:
+        jogo[0] = 3 * ((4 - 5) * (-1)); // H(6) = 5
+        break;
+      case 6:
+        jogo[0] = 3 * (((4 - 5) * (-1)) + 3); // L(0) = 3
+        break;
+      default:
+        cout << "\n\nOpção inválida! Tente novamente.\n";
+        break;
+      }
+    }
+  }
 }

@@ -35,7 +35,8 @@ void buscaGulosa() {
   cout << "Filhos de " << f << k << ": { ";
   impFilhos(fila, lstAbertos, noFilho);
   concStrCharF(k, f, lstFechados);
-  for (size_t i = 0; i < 4; i++) {
+  for (size_t i = 0; i < NUM-1; i++) {
+    cout << "\n";
     impLstFechados(lstFechados);
     ordenaFila(fila, lstAbertos);
     impLstAbertos(lstAbertos);
@@ -67,15 +68,17 @@ void buscaGulosa() {
     limpaNo(noFilho, fila);
     fila = gravaFilaFilhoH(jogo, noFilho, filho, carta, cartaX);
     impFilhos(fila, lstAbertos, noFilho);
+    cout << "\n";
     impLstFechados(lstFechados);
     ordenaFila(fila, lstAbertos);
     impLstAbertos(lstAbertos);
     verificaFinalH(jogo, final, custo, lstFechados);
-
     cout << "\n";
   }
 }
 
+
+//!  --------------------- Busca Ordenada -------------------------
 void buscaOrdenada() {
 
   int jogo[NUM] = {0, 4, 6, 5, 3},
@@ -115,6 +118,7 @@ void buscaOrdenada() {
   //!=====================================================
 
   for (size_t i = 0; i < 4; i++) {
+    cout << "\n";
     impLstFechados(lstFechados);
     ordenaFila(fila, lstAbertos);
     impLstAbertos(lstAbertos);
@@ -197,6 +201,7 @@ void buscaA() {
   concStrCharF(k, f, lstFechados);
   cout << "\n\n";
   for (size_t i = 0; i < 4; i++) {
+    cout << "\n";
     impLstFechados(lstFechados);
     ordenaFila(filaA, lstAbertos);
     impLstAbertos(lstAbertos);
@@ -238,6 +243,7 @@ void buscaA() {
     //fila = gravaFilaFilhoH(jogo, noFilho, filho, carta, cartaX);
     
     impFilhos(filaA, lstAbertos, noFilhoA);
+    cout << "\n";
     impLstFechados(lstFechados);
     ordenaFila(filaA, lstAbertos);
     impLstAbertos(lstAbertos);
