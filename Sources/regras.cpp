@@ -1073,7 +1073,7 @@ vector<int> gravaFilaFilhoP(int *jogo, vector<char> &noFilho, int &filho, int *c
       cont++;
   switch (cont) {
   case 4: {
-    cout << "4";
+   // cout << "4";
     for (int i = 1; i < NUM; i++) {
       if (jogo[i] != 0 && RESULT % jogo[i] == 0) {
         filho++;
@@ -1090,7 +1090,7 @@ vector<int> gravaFilaFilhoP(int *jogo, vector<char> &noFilho, int &filho, int *c
     }
   } break;
   case 3: {
-    cout << "3";
+    //cout << "3";
     for (int i = 1; i < NUM; i++) {
       if (jogo[i] != 0) {
         filho++;
@@ -1105,7 +1105,7 @@ vector<int> gravaFilaFilhoP(int *jogo, vector<char> &noFilho, int &filho, int *c
     }
   } break;
   case 2: {
-    cout << "2";
+    //cout << "2";
     for (int i = 1; i < NUM; i++) {
       if (jogo[i] != 0) {
         filho++;
@@ -1132,7 +1132,7 @@ vector<int> gravaFilaFilhoP(int *jogo, vector<char> &noFilho, int &filho, int *c
     }
   } break;
   case 1: {
-    cout << "1";
+    //cout << "1";
     for (int i = 1; i < NUM; i++) {
       if (jogo[i] != 0) {
         filho++;
