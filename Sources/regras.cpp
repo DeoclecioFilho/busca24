@@ -13,6 +13,14 @@ vector<int> Formula24(vector<int> form24) {
   return form24;
 }
 
+string convChar(char f) {
+
+  string c(1, f);
+  char cX[20];
+  strcpy(cX, c.c_str());
+  return cX;
+}
+
 void verificaFinal(int *jogo, int *final) {
   if (jogo[0] == final[0] && jogo[1] == final[1] && jogo[2] == final[2] && jogo[3] == final[3] && jogo[4] == final[4])
     cout << "\nFim de jogo!\n";
@@ -142,19 +150,43 @@ void printVec(string i) { // function:
 }
 
 void impLstAbertos(vector<string> &lstAbertos) {
-  cout << "Lista de Abertos: { ";
+  cout << "Lista de Abertos: {";
   for (size_t i = 0; i < lstAbertos.size(); i++) {
-    cout << lstAbertos[i];
+    cout << " " << lstAbertos[i];
   }
-  cout << "}\n";
+  cout << " }\n";
 }
 
 void impLstFechados(vector<string> &lstFechados) {
-  cout << "\nLista de Fechados: {";
+  cout << "Lista de Fechados: {";
   for (size_t i = 0; i < lstFechados.size(); i++) {
     cout << " " << lstFechados[i];
   }
-  cout << "}\n";
+  cout << " }\n";
+}
+
+void impLstFila(vector<string> &fila) {
+  cout << "Fila: {";
+  for (size_t i = 0; i < fila.size(); i++) {
+    cout << " " << fila[i];
+  }
+  cout << " }\n";
+}
+
+void impLstPilha(stack<string> &p) {
+  stack<string> temp;
+  cout << "Pilha: {";
+  // for (size_t i = 0; i < p.size(); i++)
+  while (!p.empty()) {
+    cout << " " << p.top();
+    temp.push(p.top());
+    p.pop();
+  }
+  cout << " }\n";
+  while (!temp.empty()) {
+    p.push(temp.top());
+    temp.pop();
+  }
 }
 
 void concStrCharF(string k, char f, vector<string> &lstFechados) {
@@ -432,7 +464,7 @@ void limpaNo(vector<char> &noFilho, vector<int> &fila) {
   while (noFilho.size() != 0)
     noFilho.erase(noFilho.begin());
 }
-void limpaNoH(vector<char> &noFilho,vector<char> &noFilhoA, vector<int> &filaA, vector<int> &filaO, vector<int> &filaH) {
+void limpaNoH(vector<char> &noFilho, vector<char> &noFilhoA, vector<int> &filaA, vector<int> &filaO, vector<int> &filaH) {
   while (filaA.size() != 0)
     filaA.erase(filaA.begin());
   while (filaO.size() != 0)
@@ -441,7 +473,7 @@ void limpaNoH(vector<char> &noFilho,vector<char> &noFilhoA, vector<int> &filaA, 
     filaH.erase(filaH.begin());
 
   while (noFilho.size() != 0)
-    noFilho.erase(noFilho.begin());  
+    noFilho.erase(noFilho.begin());
   while (noFilhoA.size() != 0)
     noFilhoA.erase(noFilhoA.begin());
 }
@@ -696,4 +728,214 @@ vector<int> gravaFilaFilhoH(int *jogo, vector<char> &noFilho, int &filho, int *c
   } break;
   }
   return filaFilho;
+}
+
+//? ================= LARGURA ==================
+
+void ImpFilhoRaizI(int *jogo, int &filho) {
+  int valor = 0;
+
+  cout << " → {";
+  for (int i = 1; i < NUM; i++) {
+    valor = (RESULT / jogo[i]);
+    if (RESULT % jogo[i] == 0) {
+      cout << " " << char(filho + i) << " - " << RESULT << "/" << jogo[i] << " → " << valor;
+    } else {
+      cout << " " << char(filho + i) << " - " << RESULT << "/" << jogo[i] << " → ESTADO INVÁLIDO";
+    }
+    if (i < NUM - 1)
+      cout << ",";
+  }
+  cout << "}";
+}
+
+vector<string> gravaEstado(int *jogo, int &filho, int gJogo[][NUM], string cartaXL[][NO], int &contNO, int t) {
+
+  vector<string> vetFilho;
+  int temp = 0;
+  cout << "{ ";
+  for (int i = 1; i < NUM; i++) {
+
+    if (t == 0) {
+      filho++;
+      if (RESULT % jogo[i] == 0) { //
+        char f = char(filho);
+        string s = convChar(f);
+        vetFilho.push_back(s);
+
+        contNO++;
+        cartaXL[0][contNO] = s;
+        cartaXL[1][contNO] = to_string(jogo[i]);
+        cout << s << "("; // letra
+        for (int j = 0; j < NUM; j++) {
+          temp = jogo[i];
+          jogo[0] = jogo[i];
+          jogo[i] = 0;
+          int k = jogo[j];
+          gJogo[i - 1][j] = k;
+          cout << k; // valor da carta
+          jogo[i] = temp;
+          if (j < NUM - 1)
+            cout << ", ";
+        }
+        cout << ")";
+        if (i < NUM - 1)
+          cout << ", ";
+      }
+      jogo[0] = temp;
+
+    } else {
+      if (t > 0 && t < 4) {
+        if (jogo[i] != 0) {
+          filho++;
+          char f = char(filho);
+          string s = convChar(f);
+          vetFilho.push_back(s); // vetFilho - filhos de A
+          contNO++;
+          cartaXL[0][contNO] = s;                  // letra
+          cartaXL[1][contNO] = to_string(jogo[i]); // numero
+          cout << s << "(";                        // letra
+          for (int j = 0; j < NUM; j++) {
+            temp = jogo[i];
+            jogo[0] -= jogo[i];
+            jogo[i] = 0;
+            int k = jogo[j];
+            gJogo[i - 1][j] = k;
+            cout << k; // valor da carta
+            jogo[i] = temp;
+
+            if (j < NUM - 1)
+              cout << ", ";
+
+            jogo[0] = stoi(cartaXL[1][t]); //! 4 → A
+            // cout << " * "<< jogo[0]<<" * ";
+          }
+          cout << ")";
+          if (i < NUM - 1)
+            cout << ", ";
+        }
+        // jogo[0] = stoi(cartaXL[1][t]); //! 4 → A
+      } else {
+        i++;
+
+        if (jogo[i] != 0) {
+          filho++;
+          char f = char(filho);
+          string s = convChar(f);
+          vetFilho.push_back(s); // vetFilho - filhos de A
+          contNO++;
+          cartaXL[0][contNO] = s;                  // letra
+          cartaXL[1][contNO] = to_string(jogo[i]); // numero
+          cout << s << "(";                        // letra
+          for (int j = 0; j < NUM; j++) {
+            temp = jogo[i];
+            jogo[0] += jogo[i];
+            jogo[i] = 0;
+            int k = jogo[j];
+            gJogo[i - 1][j] = k;
+            cout << k; // valor da carta
+            jogo[i] = temp;
+
+            if (j < NUM - 1)
+              cout << ", ";
+
+            jogo[0] = stoi(cartaXL[1][t]); //! 4 → A
+            // cout << " * "<< jogo[0]<<" * ";
+          }
+          cout << ")";
+          if (i < NUM - 1)
+            cout << ", ";
+        }
+        // jogo[0] = stoi(cartaXL[1][t]); //! 4 → A
+      }
+    }
+  }
+  cout << " }";
+  return vetFilho;
+}
+
+void limpaFilaL(vector<string> &fila) {
+  while (fila.size() != 0)
+    fila.erase(fila.begin());
+}
+
+void limpaPilha(stack<string> &p) {
+  while (!p.empty())
+    p.pop();
+}
+
+
+
+
+stack<string> gEstadoP(int *jogo, int &filho, int gJogo[][NUM], string cartaXL[][NO], int &contNO, int t) {
+
+  stack<string> pFilho;
+  int temp = 0;
+  cout << "{ ";
+  for (int i = 1; i < NUM; i++) {
+
+    if (t == 0) {
+      filho++;
+      if (RESULT % jogo[i] == 0) { //
+        char f = char(filho);
+        string s = convChar(f);
+        pFilho.push(s);
+
+        contNO++;
+        cartaXL[0][contNO] = s;
+        cartaXL[1][contNO] = to_string(jogo[i]);
+        cout << s << "("; // letra
+        for (int j = 0; j < NUM; j++) {
+          temp = jogo[i];
+          jogo[0] = jogo[i];
+          jogo[i] = 0;
+          int k = jogo[j];
+          gJogo[i - 1][j] = k;
+          cout << k; // valor da carta
+          jogo[i] = temp;
+          if (j < NUM - 1)
+            cout << ", ";
+        }
+        cout << ")";
+        if (i < NUM - 1)
+          cout << ", ";
+      }
+      jogo[0] = temp;
+
+    } else {
+      if (t > 0 && t < 4) {
+        if (jogo[i] != 0) {
+          filho++;
+          char f = char(filho);
+          string s = convChar(f);
+          pFilho.push(s); // vetFilho - filhos de A
+          contNO++;
+          cartaXL[0][contNO] = s;                  // letra
+          cartaXL[1][contNO] = to_string(jogo[i]); // numero
+          cout << s << "(";                        // letra
+          for (int j = 0; j < NUM; j++) {
+            temp = jogo[i];
+            jogo[0] -= jogo[i];
+            jogo[i] = 0;
+            int k = jogo[j];
+            gJogo[i - 1][j] = k;
+            cout << k; // valor da carta
+            jogo[i] = temp;
+
+            if (j < NUM - 1)
+              cout << ", ";
+
+            jogo[0] = stoi(cartaXL[1][t]); //! 4 → A
+            // cout << " * "<< jogo[0]<<" * ";
+          }
+          cout << ")";
+          if (i < NUM - 1)
+            cout << ", ";
+        }
+        // jogo[0] = stoi(cartaXL[1][t]); //! 4 → A
+      } 
+    }
+  }
+  cout << " }";
+  return pFilho;
 }
