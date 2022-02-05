@@ -340,7 +340,7 @@ int valorI(int *jogo, int i) {
   }
   return valor;
 }
-//! Regra: segunda carta escolhida
+//! Regra2: segunda carta escolhida
 int valorDiv(int *jogo, int i) {
   int valor = 0;
   int temp = 0;
@@ -356,7 +356,7 @@ int valorDiv(int *jogo, int i) {
   return valor;
 }
 
-//! Regra: terceira carta escolhida
+//! Regra3: terceira carta escolhida
 int valorSoma(int *jogo, int i) {
   int valor = 0;
   int temp = 0;
@@ -364,15 +364,15 @@ int valorSoma(int *jogo, int i) {
     temp += jogo[j];
   }
   //! soma das cartas restantes
-  if (jogo[i] != 0) { //&& RESULT % jogo[i] == 0
+  if (jogo[i] != 0) { 
     valor = (4 + jogo[i]);
     valor -= 4;
-    valor += (temp - jogo[i]); // 4 % x + SOMA DAS CARTAS - CARTA(i)
+    valor += (temp - jogo[i]); 
   }
   return valor;
 }
 
-//! Regra: terceira carta escolhida
+//! Regra3: terceira carta escolhida
 int valorSub(int *jogo, int i) {
   int valor = 0;
   int temp = 0;
@@ -380,18 +380,18 @@ int valorSub(int *jogo, int i) {
     temp += jogo[j];
   }
   //! subtração das cartas restantes
-  if (jogo[i] != 0) { //&& RESULT % jogo[i] == 0
+  if (jogo[i] != 0) { 
     valor = (4 - jogo[i]);
     if (valor < 0)
       valor = valor * (-1);
     valor -= 4;
     valor = valor * (-1);
-    valor += (temp - jogo[i]); // 4 % x + SOMA DAS CARTAS - CARTA(i)
+    valor += (temp - jogo[i]); 
   }
   return valor;
 }
 
-//! Regra: quarta carta escolhida
+//! Regra4: quarta carta escolhida
 int valorSomaQ(int *jogo, int i) {
   int valor = 0;
   int temp = 0;

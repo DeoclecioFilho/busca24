@@ -224,11 +224,7 @@ void buscaLarg() {
     for (int i = 0; i < vetTemp.size(); i++)
       lstAbertos.push_back(vetTemp[i]);
   }
-  /*         for (size_t i = 0; i < NUM; i++) {
-            jogo[i + 1] = carta[i];
-            if (jogo[i + 1] == jogo[0])
-              jogo[i + 1] = 0;
-          } */
+
 
   //!=========================================
 
@@ -276,14 +272,14 @@ void buscaLarg() {
   impLstAbertos(lstAbertos);
   impLstFechados(lstFechados); */
 
-  cout << "\n\n";
+/*   cout << "\n\n";
   for (size_t i = 0; i < 2; i++) {
     for (size_t j = 0; j < NO; j++) {
       if (cartaXL[i][j] != " ")
         cout << " " << cartaXL[i][j] << " ";
     }
-    cout << "\n";
-  }
+    cout << "\n"; 
+  }*/
   cout << "\n\n";
 }
 
@@ -320,14 +316,10 @@ void buscaProf2() {
   //!===============================================================
 
   cout << "Inicio\n";
-
-  // cout << "Filhos de " << f << k;
-  // ImpFilhoRaizP(jogo, filho);
   fila = gravaFilaFilhoP(jogo, noFilho, filho, carta, cartaX);
   cout << "\n";
   cout << "Filhos de " << f << k << ": { ";
   impFilhosO(fila, lstAbertos, noFilho);
-  // ordenaFila(fila, lstAbertos);
   cout << "}\n";
   concStrCharF(k, f, lstFechados);
   //!=====================================================
@@ -335,7 +327,6 @@ void buscaProf2() {
   for (size_t i = 0; i < 4; i++) {
     cout << "\n";
     impLstFechadosP(lstFechados); // Pilha de Fechados
-    // ordenaFila(fila, lstAbertos);
     impLstAbertosP(lstAbertos); // Pilha de abertos
     cout << "Estado atual: ";   
     cartaX[0] = 100;
@@ -364,7 +355,6 @@ void buscaProf2() {
     lstAbertos.erase(lstAbertos.begin());
     limpaNo(noFilho, fila);
     fila = gravaFilaFilhoP(jogo, noFilho, filho, carta, cartaX);
-    // custo = custo + fila[0]; // custo
     impFilhosO(fila, lstAbertos, noFilho);  // Filhos e concatena
     cout << "\n";
     verificaFinal(jogo, final);
